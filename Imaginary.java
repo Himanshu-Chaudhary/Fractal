@@ -16,7 +16,7 @@ public class Imaginary {
     @Override
     public boolean equals(Object o) {
         Imaginary toCompare = (Imaginary)o;
-        // If the object is compared with itself then return true
+        // If the object is compared with itself then return truee
         if ((toCompare.r == this.r) && (toCompare.i == this.i)) return true;
         else return false;
         }
