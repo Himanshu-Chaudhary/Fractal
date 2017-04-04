@@ -6,8 +6,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+
+
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.omg.CORBA.CODESET_INCOMPATIBLE;
+
 
 import java.lang.management.BufferPoolMXBean;
 import java.util.HashMap;
@@ -17,7 +21,7 @@ public class Main extends Application {
     int HEIGHT =800;
     int WIDTH = 800;
     int INFIITY = 10;
-    int ITERATION = 17;
+    int ITERATION = 170;
     double xOffset =0;
     double yOffset = 0;
     private GraphicsContext gtx;
@@ -29,6 +33,10 @@ public class Main extends Application {
     double y ;
     double xPos = 0;
     double yPos= 0;
+    double xC;
+    double yC;
+    double factor;
+    Color[] color;
 
 
     public void start(Stage primaryStage) throws Exception {
@@ -47,23 +55,23 @@ public class Main extends Application {
 
         Imaginary a = new Imaginary(0,0);
         Imaginary b = new Imaginary(0,0);
-
-
+        fillColor();
         draw();
         for (int i : colorno){
             System.out.println(i);
         }
 
         canvas.setOnMousePressed(e->{
-             x = (-(WIDTH/2.0)+e.getX()) * multiplier;
-             y = ((WIDTH/2.0)-e.getY()) * multiplier;
+            xC = e.getX();
+            yC = e.getY();
+
+            if (e.getButton().toString().equals("PRIMARY")) factor = 0.8;
+
+            else factor = 1.2;
+
 
             double time = System.currentTimeMillis();
 
-
-
-
-                xy.setText(e.getX()+","+e.getY()+"    "+x+" "+y+"    " + xPos+" " +yPos+"                                         ");
                 timer.start();
 
         });
@@ -72,18 +80,23 @@ public class Main extends Application {
             timer.stop();
         });
 
+
+
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                    System.out.println("Time11111= " + (l-lastFrameUpdate));
-                    xPos = x-((x/multiplier)*multiplier*0.8);
-                    yPos =  y-((y/multiplier)*multiplier*0.8);
-                    multiplier = multiplier* 0.8;
+                x = (-(WIDTH/2.0)+xC) * multiplier;
+                y = ((WIDTH/2.0)-yC) * multiplier;
+                    xPos = x-((x/multiplier)*multiplier*factor);
+                    yPos =  y-((y/multiplier)*multiplier*factor);
+                    multiplier = multiplier* factor;
                     xOffset += xPos;
                     yOffset += yPos;
                     //System.out.println(multiplier);
                     draw();
                  lastFrameUpdate = l;
+
+                 if (multiplier > 0.0072) timer.stop();
 
             }
 
@@ -106,38 +119,10 @@ public class Main extends Application {
 
     Color getColor (Imaginary number){
         int iteration = stepsToInfinity(number);
-        if (iteration < 5) {
-            colorno[0]++;
-            return Color.WHITE;
-
-        }
-        if (iteration < 2) {
-            colorno[0]++;
-            return Color.BISQUE;
-
-        }
-        if (iteration < 7) {
-            colorno[0]++;
-            return Color.AZURE;
+        if (iteration>=170) return Color.BLACK;
+        return color[iteration % 16];
 
 
-        }
-        if (iteration < 10) {
-            colorno[1]++;
-            return Color.RED;
-
-        }
-        if (iteration < 25) {
-            colorno[0]++;
-            return Color.ANTIQUEWHITE;
-
-        }
-        if (iteration < 50) {
-            colorno[2]++;
-            return Color.AQUA;
-        }
-        colorno[3]++;
-        return Color.BLACK;
     }
 
     void draw(){
@@ -157,6 +142,26 @@ public class Main extends Application {
                // System.out.println("painting");
             }
         }
+    }
+
+    void fillColor(){
+        color = new Color[16];
+        color[0] = Color.web("0x272625");
+        color[1] = Color.web("0x2D2A29");
+        color[2] = Color.web("0x332E2F");
+        color[3] = Color.web("0x393336");
+        color[4] = Color.web("0x3F373E");
+        color[5] = Color.web("0x413C45");
+        color[6] = Color.web("0x43404B");
+        color[7] = Color.web("0x434551");
+        color[8] = Color.web("0x474E57");
+        color[9] = Color.web("0x4B595D");
+        color[10] = Color.web("0x4E635E");
+        color[11] = Color.web("0x51695B");
+        color[12] = Color.web("0x546F56");
+        color[13] = Color.web("0x607557");
+        color[14] = Color.web("0x707B59");
+        color[15] = Color.web("0x87765E");
     }
 
 
