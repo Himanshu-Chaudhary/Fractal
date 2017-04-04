@@ -96,7 +96,7 @@ public class Main extends Application {
                     draw();
                  lastFrameUpdate = l;
 
-                 if (multiplier > 0.0072) timer.stop();
+                 if (multiplier > 0.0072 && factor ==1.2) timer.stop();
 
             }
 
