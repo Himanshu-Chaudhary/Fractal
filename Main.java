@@ -10,33 +10,27 @@ import javafx.scene.layout.VBox;
 
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.omg.CORBA.CODESET_INCOMPATIBLE;
-
-
-import java.lang.management.BufferPoolMXBean;
-import java.util.HashMap;
 
 public class Main extends Application {
     private Canvas canvas;
-    int HEIGHT =800;
-    int WIDTH = 800;
-    int INFIITY = 10;
-    int ITERATION = 170;
-    double xOffset =0;
-    double yOffset = 0;
+    private int HEIGHT =800;
+    private int WIDTH = 800;
+    private int INFIITY = 4;
+    private int ITERATION = 170;
+    private double xOffset =0;
+    private double yOffset = 0;
     private GraphicsContext gtx;
-    int[] colorno = new int[4];
-    double multiplier = 4.0/WIDTH;
+    private double multiplier = 4.0/WIDTH;
     private AnimationTimer timer;
-    long lastFrameUpdate =0;
-    double x ;
-    double y ;
-    double xPos = 0;
-    double yPos= 0;
-    double xC;
-    double yC;
-    double factor;
-    Color[] color;
+    private long lastFrameUpdate =0;
+    private double x ;
+    private double y ;
+    private double xPos = 0;
+    private double yPos= 0;
+    private double xC;
+    private double yC;
+    private double factor;
+    private Color[] color;
 
 
     public void start(Stage primaryStage) throws Exception {
@@ -53,27 +47,16 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(layout, canvas.getWidth() + 50, canvas.getHeight() + 50));
         primaryStage.show();
 
-        Imaginary a = new Imaginary(0,0);
-        Imaginary b = new Imaginary(0,0);
+
         fillColor();
-        draw();
-        for (int i : colorno){
-            System.out.println(i);
-        }
+        drawfast();
 
         canvas.setOnMousePressed(e->{
             xC = e.getX();
             yC = e.getY();
-
-            if (e.getButton().toString().equals("PRIMARY")) factor = 0.8;
-
-            else factor = 1.2;
-
-
-            double time = System.currentTimeMillis();
-
-                timer.start();
-
+            if (e.getButton().toString().equals("PRIMARY")) factor = 0.95;
+            else factor = 1.05;
+            timer.start();
         });
 
         canvas.setOnMouseReleased(e->{
@@ -92,12 +75,9 @@ public class Main extends Application {
                     multiplier = multiplier* factor;
                     xOffset += xPos;
                     yOffset += yPos;
-                    //System.out.println(multiplier);
-                    draw();
+                    drawfast();
                  lastFrameUpdate = l;
-
                  if (multiplier > 0.0072 && factor ==1.2) timer.stop();
-
             }
 
         };
@@ -121,26 +101,54 @@ public class Main extends Application {
         int iteration = stepsToInfinity(number);
         if (iteration>=170) return Color.BLACK;
         return color[iteration % 16];
-
-
     }
 
-    void draw(){
+    void draw(double a, double b, double endi, double endj){
         Imaginary number;
         double x;
         double y;
-      // System.out.println(multiplier);
-        for (double i =0; i <=WIDTH; i++){
-          //  System.out.println(i);
-            for (double j =0; j<=HEIGHT; j++){
+        for (double i =a; i <=endi; i++){
+            for (double j =b; j<=endj; j++){
                 x = ((i - (WIDTH/2))*multiplier)+xOffset;
                 y = ((HEIGHT/2)-j) * multiplier+yOffset;
-                //System.out.println(x+" " +y + "  "+i+" "+j);
                 number = new Imaginary(x,y);
                 gtx.setFill(getColor(number));
                 gtx.fillRect(i,j,1,1);
-               // System.out.println("painting");
             }
+        }
+    }
+
+    void drawfast(){
+        for (double i =0; i <=WIDTH; i+=5){
+            for (double j =0; j<=HEIGHT; j+=5){
+            drawFractal(i,j,(i+4),(j+4),5);
+            }
+        }
+    }
+
+    void drawFractal(double a, double b, double endi, double endj, int step){
+        if (step <= 2){
+            draw(a,b,endi,endj);
+            return;
+        }
+        Imaginary number;
+        double x;
+        double y;
+        Color[] tempColor = new Color[4];
+        double i =a;
+        double j = b;
+        double[][] c = new double[][] {{i,j},{i,(j+step)}, {(i+step),j},{(i+step),(j+step)}};
+        for (int k=0; k<4; k++){
+            x = ((c[k][0] - (WIDTH/2))*multiplier)+xOffset;
+            y = ((HEIGHT/2)-c[k][1]) * multiplier+yOffset;
+            tempColor[k] = getColor(new Imaginary(x,y));
+        }
+        if (tempColor[0] == tempColor[1] && tempColor[1] == tempColor[2] && tempColor[2]==tempColor[3]) {
+            gtx.setFill(tempColor[0]);
+            gtx.fillRect(i,j,step,step);
+                }
+        else{
+            draw(a,b,endi,endj);
         }
     }
 

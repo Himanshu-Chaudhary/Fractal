@@ -28,6 +28,9 @@ public class faster extends Application {
     double y ;
     double xPos = 0;
     double yPos= 0;
+    double xC;
+    double yC;
+    Color[] color;
 
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Faster");
@@ -42,16 +45,17 @@ public class faster extends Application {
 
         primaryStage.setScene(new Scene(layout, canvas.getWidth() + 50, canvas.getHeight() + 50));
         primaryStage.show();
+        fillColor();
         draw();
         for (int i : colorno){
             System.out.println(i);
         }
 
         canvas.setOnMousePressed(e->{
-             x = (-(WIDTH/2.0)+e.getX()) * multiplier;
-             y = ((WIDTH/2.0)-e.getY()) * multiplier;
+            xC = e.getX();
+            yC = e.getY();
 
-            System.out.println(multiplier);
+           // System.out.println(multiplier);
             double time = System.currentTimeMillis();
             timer.start();
 
@@ -68,7 +72,9 @@ public class faster extends Application {
             @Override
             public void handle(long l) {
 
-                System.out.println("Time222222 = " + (l-lastFrameUpdate));
+
+                x = (-(WIDTH/2.0)+xC) * multiplier;
+                y = ((WIDTH/2.0)-yC) * multiplier;
                     xPos = x-((x/multiplier)*multiplier*0.8);
                     yPos =  y-((y/multiplier)*multiplier*0.8);
                     multiplier = multiplier* 0.8;
@@ -108,43 +114,13 @@ public class faster extends Application {
     double magnitudeSqr (double x, double y){
         return ((x*x)+(y*y));
     }
-
     Color getColor (double x, double y){
         int iteration = stepsToInfinity(x,y);
-        if (iteration < 5) {
-            colorno[0]++;
-            return Color.WHITE;
-
-        }
-        if (iteration < 2) {
-            colorno[0]++;
-            return Color.BISQUE;
-
-        }
-        if (iteration < 7) {
-            colorno[0]++;
-            return Color.AZURE;
+        if (iteration>=170) return Color.BLACK;
+        return color[iteration % 16];
 
 
-        }
-        if (iteration < 10) {
-            colorno[1]++;
-            return Color.RED;
-
-        }
-        if (iteration < 25) {
-            colorno[0]++;
-            return Color.ANTIQUEWHITE;
-
-        }
-        if (iteration < 50) {
-            colorno[2]++;
-            return Color.AQUA;
-        }
-        colorno[3]++;
-        return Color.BLACK;
     }
-
     void draw(){
         Imaginary number;
         double x;
@@ -161,7 +137,27 @@ public class faster extends Application {
                 // System.out.println("painting");
             }
         }
-        System.out.println("drawing completed");
+
+    }
+
+    void fillColor(){
+        color = new Color[16];
+        color[0] = Color.web("0x272625");
+        color[1] = Color.web("0x2D2A29");
+        color[2] = Color.web("0x332E2F");
+        color[3] = Color.web("0x393336");
+        color[4] = Color.web("0x3F373E");
+        color[5] = Color.web("0x413C45");
+        color[6] = Color.web("0x43404B");
+        color[7] = Color.web("0x434551");
+        color[8] = Color.web("0x474E57");
+        color[9] = Color.web("0x4B595D");
+        color[10] = Color.web("0x4E635E");
+        color[11] = Color.web("0x51695B");
+        color[12] = Color.web("0x546F56");
+        color[13] = Color.web("0x607557");
+        color[14] = Color.web("0x707B59");
+        color[15] = Color.web("0x87765E");
     }
 
 
