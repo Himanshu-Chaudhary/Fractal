@@ -1,7 +1,9 @@
 import java.util.Objects;
 
 /**
- * Created by hIM on 3/30/2017.
+ * Himanshu Chaudhary
+ * Is the class to represent imaginary numbers and perform computations on it
+ *
  */
 public class Imaginary {
     double r;
@@ -13,30 +15,20 @@ public class Imaginary {
         this.i = i;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        Imaginary toCompare = (Imaginary)o;
-        // If the object is compared with itself then return truee
-        if ((toCompare.r == this.r) && (toCompare.i == this.i)) return true;
-        else return false;
-        }
 
-    @Override
-    public int hashCode() {
-        long real = Double.doubleToLongBits(this.r); // harmonize NaN bit patterns
-        long imag = Double.doubleToLongBits(this.i);
-        if (real == 1L << 63) real = 0; // convert -0.0 to +0.0
-        if (imag == 1L << 63) imag = 0;
-        long h = real ^ imag;
-        return (int)h ^ (int)(h >>> 32);
-    }
-
-
+    /**
+     * @param number
+     *        is the number to be added
+     * This method adds imaginary number passed to itself
+     */
     void add (Imaginary number){
         this.r += number.r;
         this.i += number.i;
     }
 
+    /**
+     * This function squares itself and updates its Real and imaginary value
+     */
     void square (){
         double r  = (this.r*this.r) - (this.i *this.i);
         double i = 2*(this.r*this.i);
@@ -44,15 +36,19 @@ public class Imaginary {
         this.r = r;
     }
 
+    /**
+     * This function returns the square od maginitude of the imaginary number
+     * @return maginute sqaure of the imaginary number
+     */
     double magnitudeSqr (){ return ((this.r*this.r) + (this.i * this.i));}
 
+    /**
+     * Prints the real and imaginary part of the Imaginary Number
+     */
     void print (){
         System.out.println(this.r + " " + this.i);
     }
 
-    void printMagnitude (){
-        System.out.println("Magnitude " +this.magnitudeSqr());
-    }
 
 
     }

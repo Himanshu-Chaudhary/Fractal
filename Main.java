@@ -1,9 +1,11 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -11,10 +13,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
     private Canvas canvas;
-    private int HEIGHT =800;
-    private int WIDTH = 800;
+    private int HEIGHT =600;
+    private int WIDTH = 600;
     private int INFIITY = 4;
     private int ITERATION = 170;
     private double xOffset =0;
@@ -35,21 +38,23 @@ public class Main extends Application {
 
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Main");
+        primaryStage.setResizable(false);
         canvas = new Canvas(WIDTH,HEIGHT);
         gtx = canvas.getGraphicsContext2D();
 
         VBox layout = new VBox(10);
         GridPane buttonBox = new GridPane();
-        Button xy = new Button("X & Y");
+        buttonBox.setPadding(new Insets(10, 10, 0, 10));
+        Label xy = new Label("Right Click Anywhere to Zoom in, Left Click to Zoom out ");
         buttonBox.getChildren().add(xy);
         layout.getChildren().addAll(buttonBox, canvas);
 
-        primaryStage.setScene(new Scene(layout, canvas.getWidth() + 50, canvas.getHeight() + 50));
+        primaryStage.setScene(new Scene(layout, canvas.getWidth(),canvas.getHeight()+30));
         primaryStage.show();
 
 
         fillColor();
-        drawfast();
+        draw(0,0,WIDTH,WIDTH);
 
         canvas.setOnMousePressed(e->{
             xC = e.getX();
@@ -75,7 +80,7 @@ public class Main extends Application {
                     multiplier = multiplier* factor;
                     xOffset += xPos;
                     yOffset += yPos;
-                    drawfast();
+                drawfast();
                  lastFrameUpdate = l;
                  if (multiplier > 0.0072 && factor ==1.2) timer.stop();
             }
